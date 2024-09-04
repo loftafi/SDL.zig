@@ -13,7 +13,7 @@ pub fn build(b: *std.Build) !void {
     const freetype_dep = b.dependency("freetype", .{});
     const wayland_scanner_dep = b.dependency("wayland_scanner", .{
         .target = b.host,
-        .optimize = optimize,
+        .optimize = .ReleaseFast,
     });
     const font_dep = b.dependency("fonts", .{});
 
