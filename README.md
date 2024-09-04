@@ -8,6 +8,10 @@ SPDX-License-Identifier: Zlib
 
 Build [SDL](https://github.com/libsdl-org/SDL) using [zig](https://ziglang.org).
 
+Also includes
+
+- [SDL_ttf](https://github.com/libsdl-org/SDL_ttf)
+
 ## License
 
 [Zlib](https://spdx.org/licenses/Zlib.html), same as [SDL](https://github.com/libsdl-org/SDL).

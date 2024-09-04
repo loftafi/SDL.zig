@@ -8,5 +8,6 @@ zig-out
 /**/zig-out/
 /**/.zig-cache/
 
-# local copy of SDL, used when updating
+# local copies of SDL repos, used when updating
 SDL/
+SDL_ttf/

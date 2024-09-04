@@ -1,0 +1,19 @@
+// SPDX-FileCopyrightText: © 2024 Mark Delk <jethrodaniel@gmail.com>
+//
+// SPDX-License-Identifier: Zlib
+
+.{
+    .name = "freetype",
+    .version = "0.0.0",
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+    },
+    .dependencies = .{
+        // NOTE: matches SDL_ttf's external/freetype submodule
+        .freetype = .{
+            .url = "git+https://github.com/libsdl-org/freetype#12c5e620858bd503731091e9371d06c0a3e7c967",
+            .hash = "122024689aa770726588625a652c00354ea9b28e2afe1388a87e6854c51374ef2e84",
+        },
+    },
+}

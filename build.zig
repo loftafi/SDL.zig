@@ -9,6 +9,8 @@ pub fn build(b: *std.Build) !void {
     const optimize = b.standardOptimizeOption(.{});
 
     const sdl_dep = b.dependency("sdl", .{});
+    const sdl_ttf_dep = b.dependency("sdl_ttf", .{});
+    const freetype_dep = b.dependency("freetype", .{});
     const wayland_dep = b.dependency("wayland", .{});
 
     //
@@ -503,18 +505,49 @@ pub fn build(b: *std.Build) !void {
         b.installArtifact(sdl_for_libs);
     }
 
+    const SDL_ttf = b.addStaticLibrary(.{
+        .name = "SDL3_ttf",
+        .target = target,
+        .optimize = optimize,
+    });
+    {
+        SDL_ttf.addCSourceFiles(.{
+            .root = sdl_ttf_dep.path(""),
+            .files = &.{"src/SDL_ttf.c"},
+            .flags = &.{},
+        });
+        SDL_ttf.addIncludePath(sdl_ttf_dep.path("include"));
+        SDL_ttf.installHeadersDirectory(sdl_ttf_dep.path("include/SDL3_ttf"), "SDL3_ttf", .{});
+
+        SDL_ttf.linkLibrary(freetype_dep.artifact("freetype"));
+
+        if (target.result.os.tag == .macos) {
+            const sdk = std.zig.system.darwin.getSdk(b.allocator, b.host.result) orelse
+                @panic("macOS SDK is missing");
+            SDL_ttf.addSystemIncludePath(.{ .cwd_relative = b.pathJoin(&.{ sdk, "/usr/include" }) });
+            SDL_ttf.addSystemFrameworkPath(.{ .cwd_relative = b.pathJoin(&.{ sdk, "/System/Library/Frameworks" }) });
+            SDL_ttf.addLibraryPath(.{ .cwd_relative = b.pathJoin(&.{ sdk, "/usr/lib" }) });
+        }
+
+        SDL_ttf.linkLibrary(sdl_for_libs);
+
+        b.installArtifact(SDL_ttf);
+    }
+
     //--
 
     const module = b.addModule("sdl", .{
         .root_source_file = b.addWriteFiles().add("src/lib.zig",
             \\pub const c = @cImport({
             \\    @cInclude("SDL3/SDL.h");
+            \\    @cInclude("SDL3_ttf/SDL_ttf.h");
             \\});
         ),
         .link_libc = true,
     });
     {
         module.linkLibrary(lib);
+        module.linkLibrary(SDL_ttf);
 
         // In case you need to build it the non-zig way, for comparison:
         //
@@ -529,15 +562,17 @@ pub fn build(b: *std.Build) !void {
         // module.addIncludePath(b.path("SDL/build/install/include"));
     }
 
-    const example = b.addExecutable(.{
-        .name = "example",
-        .root_source_file = b.path("src/example.zig"),
-        .target = target,
-        .optimize = optimize,
-    });
-    {
-        const exe = example;
-
+    const zig_examples = [_][]const u8{
+        "minimal",
+        "ttf",
+    };
+    for (zig_examples) |name| {
+        const exe = b.addExecutable(.{
+            .name = b.fmt("zig-{s}", .{name}),
+            .target = target,
+            .root_source_file = b.path(b.fmt("src/{s}.zig", .{name})),
+            .optimize = optimize,
+        });
         exe.root_module.addImport("sdl", module);
 
         if (target.result.os.tag == .macos) {
@@ -548,13 +583,24 @@ pub fn build(b: *std.Build) !void {
             exe.addLibraryPath(.{ .cwd_relative = b.pathJoin(&.{ sdk, "/usr/lib" }) });
         }
 
-        const install = b.addInstallBinFile(exe.getEmittedBin(), "example");
-
         const run = b.addRunArtifact(exe);
-        const step = b.step("example", "");
-        step.dependOn(&run.step);
-        step.dependOn(&install.step); // install if you run it
+
+        if (b.args) |args| run.addArgs(args);
+
+        // TODO: provide general-purpose fonts?
+        if (std.mem.eql(u8, name, "ttf")) {
+            const font_dep = b.dependency("fonts", .{});
+            exe.root_module.addImport("fonts", font_dep.module("fonts"));
+        }
+
+        const install = b.addInstallBinFile(exe.getEmittedBin(), name);
+
+        const run_step = b.step(b.fmt("zig-{s}", .{name}), b.fmt("Run src/{s}.zig", .{name}));
+        run_step.dependOn(&run.step);
+        run_step.dependOn(&install.step); // install example if you run it
     }
+
+    //--
 
     const test_step = b.step("test", "Build all test programs");
 
