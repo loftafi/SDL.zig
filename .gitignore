@@ -1,0 +1,8 @@
+# zig artifacts and cache
+zig-out
+.zig-cache
+/**/zig-out/
+/**/.zig-cache/
+
+# local copy of SDL, used when updating
+SDL/

@@ -1,0 +1,18 @@
+.{
+    .name = "wayland",
+    .version = "0.0.0",
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+    },
+    .dependencies = .{
+        .wayland = .{
+            .url = "git+https://gitlab.freedesktop.org/wayland/wayland.git#1.22.0",
+            .hash = "12204035d74e1978e3e4067d81d1a74aff5eaf6a80cc70aade59ee46247489e3a131",
+        },
+        .expat = .{
+            .url = "git+https://github.com/libexpat/libexpat#R_2_6_1",
+            .hash = "1220ac6fead249f922d08168f43295090ba7d6e7567e0314dc06cf2fb9ce11ed2bea",
+        },
+    },
+}
