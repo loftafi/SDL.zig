@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Zlib
 
 .{
-    .name = "wayland",
+    .name = "wayland_scanner",
     .version = "0.0.0",
     .paths = .{
         "build.zig",

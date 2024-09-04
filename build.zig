@@ -11,7 +11,10 @@ pub fn build(b: *std.Build) !void {
     const sdl_dep = b.dependency("sdl", .{});
     const sdl_ttf_dep = b.dependency("sdl_ttf", .{});
     const freetype_dep = b.dependency("freetype", .{});
-    const wayland_dep = b.dependency("wayland", .{});
+    const wayland_scanner_dep = b.dependency("wayland_scanner", .{
+        .target = b.host,
+        .optimize = optimize,
+    });
 
     //
 
@@ -386,7 +389,7 @@ pub fn build(b: *std.Build) !void {
 
                 lib.linkSystemLibrary("dbus-1");
 
-                const wayland_scanner = wayland_dep.artifact("wayland-scanner");
+                const wayland_scanner = wayland_scanner_dep.artifact("wayland-scanner");
                 {
                     const wayland_xmls = [_][]const u8{
                         "alpha-modifier-v1",
@@ -431,31 +434,17 @@ pub fn build(b: *std.Build) !void {
                     lib.addIncludePath(copy_headers.getDirectory());
                 }
 
-                // TODO: build wayland from source?
-                //
-                //   sudo apt install -y libwayland-dev
-                //
-                // TODO: It compiles, but we get errors like this:
-                //
-                //   libwayland-client.so' is neither ET_REL nor LLVM bitcode
-                //
-                // lib.linkLibrary(wayland_dep.artifact("wayland-client"));
-                // lib.linkLibrary(wayland_dep.artifact("wayland-egl"));
-                // lib.linkLibrary(wayland_dep.artifact("wayland-cursor"));
+                // sudo apt install -y libwayland-dev
                 lib.linkSystemLibrary("wayland-client");
                 lib.linkSystemLibrary("wayland-egl");
                 lib.linkSystemLibrary("wayland-cursor");
 
-                // NOTE: We can build from source, but it's involved,
-                // and will require building yacc/bison...
-                //
-                // https://github.com/xkbcommon/libxkbcommon
+                // sudo apt install -y libxkbcommon-dev
                 lib.linkSystemLibrary("xkbcommon");
 
                 // https://www.mesa3d.org/
                 //
                 //   sudo apt install -y libegl1-mesa-dev
-                //
                 lib.linkSystemLibrary("EGL");
                 lib.linkSystemLibrary("GLESv2");
 

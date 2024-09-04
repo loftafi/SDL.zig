@@ -26,8 +26,8 @@
         .fonts = .{
             .path = "build/fonts",
         },
-        .wayland = .{
-            .path = "build/wayland",
+        .wayland_scanner = .{
+            .path = "build/wayland_scanner",
         },
     },
 }
