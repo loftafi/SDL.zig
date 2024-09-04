@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2024 Mark Delk <jethrodaniel@gmail.com>
+//
+// SPDX-License-Identifier: Zlib
+
 const std = @import("std");
 
 pub fn build(b: *std.Build) !void {
