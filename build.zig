@@ -363,13 +363,6 @@ pub fn build(b: *std.Build) !void {
                     .flags = &.{},
                 });
 
-                // TODO: fix -Wno-incompatible-pointer-types issue with SDL_PIPEWIRE_SHARED=OFF
-                lib.addCSourceFiles(.{
-                    .root = sdl_dep.path(""),
-                    .files = &.{"src/audio/pipewire/SDL_pipewire.c"},
-                    .flags = &.{"-Wno-incompatible-pointer-types"},
-                });
-
                 inline for (std.meta.fields(@TypeOf(values))) |f| {
                     const value = b.fmt("{any}", .{@field(values, f.name)});
                     lib.defineCMacro(f.name, value);
@@ -457,10 +450,11 @@ pub fn build(b: *std.Build) !void {
 
                 //-- SDL_AUDIODRIVER
 
-                // SDL_AUDIO_DRIVER=pipewire
-                // sudo apt install libpipewire-0.3-dev
-                //
                 // https://wiki.archlinux.org/title/PipeWire
+                //
+                // SDL_AUDIO_DRIVER=pipewire
+                //
+                //   sudo apt install libpipewire-0.3-dev
                 //
                 // TODO: why isn't `linkSystemLibrary` enough to find the headers?
                 // See https://github.com/ziglang/zig/issues/18465
@@ -1066,8 +1060,7 @@ const linux_src_files = [_][]const u8{
     // "src/audio/netbsd/SDL_netbsdaudio.c",
     // "src/audio/openslES/SDL_openslES.c",
 
-    // TODO: fix -Wno-incompatible-pointer-types issue with SDL_PIPEWIRE_SHARED=OFF
-    // "src/audio/pipewire/SDL_pipewire.c",
+    "src/audio/pipewire/SDL_pipewire.c",
     "src/camera/pipewire/SDL_camera_pipewire.c",
 
     // "src/audio/ps2/SDL_ps2audio.c",
