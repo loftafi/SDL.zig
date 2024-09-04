@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: © 2024 Mark Delk <jethrodaniel@gmail.com>
 SPDX-License-Identifier: Zlib
 -->
 
-# sdl.zig
+# SDL.zig
 
 Build [SDL](https://github.com/libsdl-org/SDL) using [zig](https://ziglang.org).
 
