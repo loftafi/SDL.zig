@@ -15,6 +15,7 @@ pub fn build(b: *std.Build) !void {
         .target = b.host,
         .optimize = optimize,
     });
+    const font_dep = b.dependency("fonts", .{});
 
     //
 
@@ -525,12 +526,14 @@ pub fn build(b: *std.Build) !void {
             \\    @cInclude("SDL3/SDL.h");
             \\    @cInclude("SDL3_ttf/SDL_ttf.h");
             \\});
+            \\pub const fonts = @import("fonts");
         ),
         .link_libc = true,
     });
     {
         module.linkLibrary(lib);
         module.linkLibrary(SDL_ttf);
+        module.addImport("fonts", font_dep.module("fonts"));
 
         // In case you need to build it the non-zig way, for comparison:
         //
@@ -569,12 +572,6 @@ pub fn build(b: *std.Build) !void {
         const run = b.addRunArtifact(exe);
 
         if (b.args) |args| run.addArgs(args);
-
-        // TODO: provide general-purpose fonts?
-        if (std.mem.eql(u8, name, "ttf")) {
-            const font_dep = b.dependency("fonts", .{});
-            exe.root_module.addImport("fonts", font_dep.module("fonts"));
-        }
 
         const install = b.addInstallBinFile(exe.getEmittedBin(), name);
 
