@@ -5,10 +5,7 @@
 .{
     .name = "sdl",
     .version = "0.0.0",
-    .paths = .{
-        "build.zig",
-        "build.zig.zon",
-    },
+    .paths = .{""},
     .dependencies = .{
         .sdl = .{
             .url = "git+https://github.com/libsdl-org/SDL?ref=main#575d9cda6f169b06e8f500acb8d3534408216185",

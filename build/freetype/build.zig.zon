@@ -5,10 +5,7 @@
 .{
     .name = "freetype",
     .version = "0.0.0",
-    .paths = .{
-        "build.zig",
-        "build.zig.zon",
-    },
+    .paths = .{""},
     .dependencies = .{
         // NOTE: matches SDL_ttf's external/freetype submodule
         .freetype = .{

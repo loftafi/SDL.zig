@@ -5,11 +5,7 @@
 .{
     .name = "fonts",
     .version = "0.0.0",
-    .paths = .{
-        "src",
-        "build.zig",
-        "build.zig.zon",
-    },
+    .paths = .{""},
     .dependencies = .{
         .intel_one_mono = .{
             .url = "git+https://github.com/intel/intel-one-mono#V1.3.0",

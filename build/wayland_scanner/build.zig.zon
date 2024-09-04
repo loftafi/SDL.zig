@@ -5,10 +5,7 @@
 .{
     .name = "wayland_scanner",
     .version = "0.0.0",
-    .paths = .{
-        "build.zig",
-        "build.zig.zon",
-    },
+    .paths = .{""},
     .dependencies = .{
         .wayland = .{
             .url = "git+https://gitlab.freedesktop.org/wayland/wayland.git#1.22.0",
