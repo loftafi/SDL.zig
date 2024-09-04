@@ -531,7 +531,7 @@ pub fn build(b: *std.Build) !void {
 
     const example = b.addExecutable(.{
         .name = "example",
-        .root_source_file = b.path("src/minimal.zig"),
+        .root_source_file = b.path("src/example.zig"),
         .target = target,
         .optimize = optimize,
     });
@@ -539,8 +539,6 @@ pub fn build(b: *std.Build) !void {
         const exe = example;
 
         exe.root_module.addImport("sdl", module);
-        // TODO: why is `linkLibrary` also needed? zig bug?
-        exe.linkLibrary(lib);
 
         if (target.result.os.tag == .macos) {
             const sdk = std.zig.system.darwin.getSdk(b.allocator, b.host.result) orelse
