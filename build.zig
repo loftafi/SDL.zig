@@ -1357,7 +1357,6 @@ const objective_c_src_files = [_][]const u8{
     "src/audio/coreaudio/SDL_coreaudio.m",
     "src/camera/coremedia/SDL_camera_coremedia.m",
     "src/dialog/cocoa/SDL_cocoadialog.m",
-    "src/file/cocoa/SDL_iostreambundlesupport.m",
     "src/filesystem/cocoa/SDL_sysfilesystem.m",
     "src/hidapi/ios/hid.m",
     "src/joystick/apple/SDL_mfijoystick.m",
@@ -1367,6 +1366,7 @@ const objective_c_src_files = [_][]const u8{
     "src/misc/macos/SDL_sysurl.m",
     "src/render/metal/SDL_render_metal.m",
     "src/sensor/coremotion/SDL_coremotionsensor.m",
+
     "src/video/cocoa/SDL_cocoaclipboard.m",
     "src/video/cocoa/SDL_cocoaevents.m",
     "src/video/cocoa/SDL_cocoakeyboard.m",
@@ -1376,10 +1376,14 @@ const objective_c_src_files = [_][]const u8{
     "src/video/cocoa/SDL_cocoamouse.m",
     "src/video/cocoa/SDL_cocoaopengl.m",
     "src/video/cocoa/SDL_cocoaopengles.m",
+    "src/video/cocoa/SDL_cocoapen.m",
     "src/video/cocoa/SDL_cocoashape.m",
     "src/video/cocoa/SDL_cocoavideo.m",
     "src/video/cocoa/SDL_cocoavulkan.m",
     "src/video/cocoa/SDL_cocoawindow.m",
+
+    "src/gpu/metal/SDL_gpu_metal.m",
+
     "src/video/uikit/SDL_uikitappdelegate.m",
     "src/video/uikit/SDL_uikitclipboard.m",
     "src/video/uikit/SDL_uikitevents.m",
