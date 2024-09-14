@@ -350,6 +350,9 @@ pub fn build(b: *std.Build) !void {
                     .SDL_DISABLE_LSX = 1,
                     .SDL_DISABLE_LASX = 1,
                     .SDL_DISABLE_NEON = 1,
+
+                    .SDL_PROCESS_POSIX = 1,
+                    .SDL_PROCESS_DUMMY = 1,
                 };
                 lib.installConfigHeader(b.addConfigHeader(.{
                     .style = .{ .cmake = sdl_dep.path(
@@ -947,6 +950,9 @@ const generic_src_files = [_][]const u8{
 
     "src/power/SDL_power.c",
 
+    "src/process/SDL_process.c",
+    "src/process/dummy/SDL_dummyprocess.c",
+
     "src/render/SDL_d3dmath.c",
     "src/render/SDL_render.c",
     "src/render/SDL_render_unsupported.c",
@@ -1173,6 +1179,8 @@ const linux_src_files = [_][]const u8{
     // "src/power/n3ds/SDL_syspower.c",
     // "src/power/psp/SDL_syspower.c",
     // "src/power/vita/SDL_syspower.c",
+
+    "src/process/SDL_process.c",
 
     // "src/sensor/android/SDL_androidsensor.c",
     // "src/sensor/n3ds/SDL_n3dssensor.c",
