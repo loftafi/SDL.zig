@@ -1180,7 +1180,7 @@ const linux_src_files = [_][]const u8{
     // "src/power/psp/SDL_syspower.c",
     // "src/power/vita/SDL_syspower.c",
 
-    "src/process/SDL_process.c",
+    "src/process/posix/SDL_posixprocess.c",
 
     // "src/sensor/android/SDL_androidsensor.c",
     // "src/sensor/n3ds/SDL_n3dssensor.c",
@@ -1324,6 +1324,8 @@ const darwin_src_files = [_][]const u8{
     // shared with linux
     "src/filesystem/posix/SDL_sysfsops.c",
     "src/filesystem/unix/SDL_sysfilesystem.c",
+
+    "src/process/posix/SDL_posixprocess.c",
 
     "src/thread/pthread/SDL_syscond.c",
     "src/thread/pthread/SDL_sysmutex.c",
