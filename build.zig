@@ -963,6 +963,11 @@ const generic_src_files = [_][]const u8{
     "src/render/direct3d11/SDL_shaders_d3d11.c",
     "src/render/direct3d12/SDL_render_d3d12.c",
     "src/render/direct3d12/SDL_shaders_d3d12.c",
+
+    "src/render/gpu/SDL_pipeline_gpu.c",
+    "src/render/gpu/SDL_render_gpu.c",
+    "src/render/gpu/SDL_shaders_gpu.c",
+
     "src/render/opengl/SDL_render_gl.c",
     "src/render/opengl/SDL_shaders_gl.c",
     "src/render/opengles2/SDL_render_gles2.c",

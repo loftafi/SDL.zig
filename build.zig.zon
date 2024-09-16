@@ -8,8 +8,8 @@
     .paths = .{""},
     .dependencies = .{
         .sdl = .{
-            .url = "git+https://github.com/libsdl-org/SDL?ref=main#27862907c65453e53828e9d892df81c8ce536ea7",
-            .hash = "12201ead5039f3cda212c6dbe0f293de87c25d8a859169187c63d5756b22b39768fa",
+            .url = "git+https://github.com/libsdl-org/SDL?ref=main#4f722d372ae7246f123762b0407cbec1e6e71d65",
+            .hash = "122003b98a58e3b549bbed69d8aa1713f01d53d337dd512e80251918af385da96ef1",
         },
         .sdl_ttf = .{
             .url = "git+https://github.com/libsdl-org/SDL_ttf?ref=main#28e2a1126b8bcf97693d024dbd034f62fe373965",
