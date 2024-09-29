@@ -8,17 +8,15 @@
     .paths = .{""},
     .dependencies = .{
         .sdl = .{
-            .url = "git+https://github.com/libsdl-org/SDL?ref=main#4f722d372ae7246f123762b0407cbec1e6e71d65",
-            .hash = "122003b98a58e3b549bbed69d8aa1713f01d53d337dd512e80251918af385da96ef1",
+            .url = "git+https://github.com/libsdl-org/SDL?ref=main#62938837c239309500d0c078209ace4760909ec8",
+            .hash = "12204cc7c5c5885c0d804ded40698480a38786a5b30efeab15588e6d53de80682a4a",
         },
         .sdl_ttf = .{
-            .url = "git+https://github.com/libsdl-org/SDL_ttf?ref=main#8cb1095cc20a5395bef011051ff625de4d2598c8",
-            .hash = "1220369b99f58e79b6aeeac68703210f8e32367079ce58e2811192a7a92bee4a81bb",
+            .url = "git+https://github.com/libsdl-org/SDL_ttf?ref=main#41342890704ef3cac661a0d301f3dd122d96a039",
+            .hash = "1220c2c929aa0731a6ed363d4aa5beac07d3224e52f3b7a28052efee71ce43512e9c",
         },
         .freetype = .{
             .path = "build/freetype",
-            // .url = "git+https://gitlab.freedesktop.org/freetype/freetype.git#VER-2-13-2",
-            // .hash = "1220b81f6ecfb3fd222f76cf9106fecfa6554ab07ec7fdc4124b9bb063ae2adf969d",
         },
         .fonts = .{
             .path = "build/fonts",

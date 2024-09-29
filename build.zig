@@ -781,14 +781,26 @@ pub fn build(b: *std.Build) !void {
         };
 
         const sdl_examples = [_]SdlExample{
-            SdlExample{ .path = "examples/audio/01-simple-playback", .name = "simple-playback" },
-            SdlExample{ .path = "examples/audio/02-simple-playback-callback", .name = "simple-playback-callback" },
-            SdlExample{ .path = "examples/audio/03-load-wav", .name = "load-wav" },
-            SdlExample{ .path = "examples/camera/01-read-and-draw", .name = "read-and-draw" },
-            SdlExample{ .path = "examples/game/01-snake", .name = "snake" },
-            SdlExample{ .path = "examples/pen/01-drawing-lines", .name = "drawing-lines" },
-            SdlExample{ .path = "examples/renderer/01-clear", .name = "renderer-clear" },
-            SdlExample{ .path = "examples/renderer/02-primitives", .name = "renderer-primitives" },
+            SdlExample{ .path = "examples/audio/01-simple-playback/simple-playback.c", .name = "simple-playback" },
+            SdlExample{ .path = "examples/audio/02-simple-playback-callback/simple-playback-callback.c", .name = "simple-playback-callback" },
+            SdlExample{ .path = "examples/audio/03-load-wav/load-wav.c", .name = "load-wav" },
+            SdlExample{ .path = "examples/camera/01-read-and-draw/read-and-draw.c", .name = "read-and-draw" },
+            SdlExample{ .path = "examples/game/01-snake/snake.c", .name = "snake" },
+            SdlExample{ .path = "examples/pen/01-drawing-lines/drawing-lines.c", .name = "drawing-lines" },
+            SdlExample{ .path = "examples/renderer/01-clear/clear.c", .name = "clear" },
+            SdlExample{ .path = "examples/renderer/02-primitives/primitives.c", .name = "primitives" },
+            SdlExample{ .path = "examples/renderer/03-lines/lines.c", .name = "lines" },
+            SdlExample{ .path = "examples/renderer/04-points/points.c", .name = "points" },
+            SdlExample{ .path = "examples/renderer/05-rectangles/rectangles.c", .name = "rectangles" },
+            SdlExample{ .path = "examples/renderer/06-textures/textures.c", .name = "textures" },
+            SdlExample{ .path = "examples/renderer/07-streaming-textures/streaming-textures.c", .name = "streaming-textures" },
+            SdlExample{ .path = "examples/renderer/08-rotating-textures/rotating-textures.c", .name = "rotating-textures" },
+            SdlExample{ .path = "examples/renderer/09-scaling-textures/scaling-textures.c", .name = "scaling-textures" },
+            SdlExample{ .path = "examples/renderer/10-geometry/geometry.c", .name = "geometry" },
+            SdlExample{ .path = "examples/renderer/11-color-mods/color-mods.c", .name = "color-mods" },
+            SdlExample{ .path = "examples/renderer/14-viewport/viewport.c", .name = "viewport" },
+            SdlExample{ .path = "examples/renderer/15-cliprect/cliprect.c", .name = "cliprect" },
+            SdlExample{ .path = "examples/renderer/17-read-pixels/read-pixels.c", .name = "read-pixels" },
         };
 
         for (sdl_examples) |sdl_example| {
@@ -801,7 +813,7 @@ pub fn build(b: *std.Build) !void {
                 .optimize = optimize,
             });
             exe.addCSourceFile(.{
-                .file = sdl_dep.path(b.fmt("{s}/{s}.c", .{ path, name })),
+                .file = sdl_dep.path(path),
                 .flags = &.{},
             });
             exe.linkLibrary(lib);
@@ -1006,6 +1018,7 @@ const generic_src_files = [_][]const u8{
     "src/stdlib/SDL_stdlib.c",
     "src/stdlib/SDL_string.c",
     "src/stdlib/SDL_strtokr.c",
+    "src/stdlib/SDL_murmur3.c",
 
     "src/storage/SDL_storage.c",
     "src/storage/generic/SDL_genericstorage.c",
@@ -1158,6 +1171,7 @@ const linux_src_files = [_][]const u8{
     "src/joystick/hidapi/SDL_hidapi_xboxone.c",
     "src/joystick/hidapi/SDL_hidapijoystick.c",
     "src/joystick/linux/SDL_sysjoystick.c",
+    "src/joystick/hidapi/SDL_hidapi_steam_hori.c",
 
     // "src/joystick/n3ds/SDL_sysjoystick.c",
     // "src/joystick/ps2/SDL_sysjoystick.c",

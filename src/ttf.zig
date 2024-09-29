@@ -7,12 +7,6 @@ const sdl = @import("sdl").c;
 const font_file = @import("sdl").fonts.intel_one_mono_regular;
 
 pub fn main() !void {
-    var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
-    defer arena.deinit();
-    const allocator = arena.allocator();
-
-    //
-
     if (!sdl.SDL_Init(sdl.SDL_INIT_VIDEO)) {
         std.log.err("Unable to initialize SDL: {s}", .{sdl.SDL_GetError()});
         return error.SDLInitializationFailed;
@@ -114,8 +108,7 @@ pub fn main() !void {
                 .a = @floor(0.87 * 255),
             };
 
-            const c_str = try allocator.dupeZ(u8, text);
-            const text_surface = sdl.TTF_RenderText_Solid(font, c_str, color) orelse {
+            const text_surface = sdl.TTF_RenderText_Blended(font, text.ptr, text.len, color) orelse {
                 std.log.err("TTF_RenderText_Solid: {s}", .{sdl.SDL_GetError()});
                 return error.TTF_RenderText_Solid;
             };
