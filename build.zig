@@ -1337,6 +1337,7 @@ const darwin_src_files = [_][]const u8{
     "src/haptic/darwin/SDL_syshaptic.c",
     // "src/hidapi/mac/hid.c",
     // "src/joystick/hidapi/SDL_hidapijoystick.c",
+    "src/joystick/hidapi/SDL_hidapi_steam_hori.c",
     "src/joystick/darwin/SDL_iokitjoystick.c",
     "src/power/macos/SDL_syspower.c",
 
