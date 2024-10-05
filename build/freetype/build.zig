@@ -19,7 +19,11 @@ pub fn build(b: *std.Build) !void {
         .strip = true,
     });
     {
-        lib.defineCMacro("NDEBUG", "1");
+        if (optimize != .Debug) {
+            lib.defineCMacro("NDEBUG", "1");
+            lib.defineCMacro("__FILE__", "\"__FILE__\"");
+            lib.defineCMacro("__LINE__", "0");
+        }
 
         lib.addCSourceFiles(.{
             .root = freetype_dep.path(""),

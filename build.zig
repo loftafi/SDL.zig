@@ -42,7 +42,12 @@ pub fn build(b: *std.Build) !void {
             .Debug => 3,
         };
         lib.defineCMacro("SDL_ASSERT_LEVEL", b.fmt("{d}", .{SDL_ASSERT_LEVEL}));
-        lib.defineCMacro("NDEBUG", "1");
+
+        if (optimize != .Debug) {
+            lib.defineCMacro("NDEBUG", "1");
+            lib.defineCMacro("__FILE__", "\"__FILE__\"");
+            lib.defineCMacro("__LINE__", "0");
+        }
 
         lib.linkLibC();
 
