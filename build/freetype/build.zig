@@ -16,8 +16,11 @@ pub fn build(b: *std.Build) !void {
         .name = "freetype",
         .target = target,
         .optimize = optimize,
+        .strip = true,
     });
     {
+        lib.defineCMacro("NDEBUG", "1");
+
         lib.addCSourceFiles(.{
             .root = freetype_dep.path(""),
             .files = &.{

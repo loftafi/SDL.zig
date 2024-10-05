@@ -23,6 +23,7 @@ pub fn build(b: *std.Build) !void {
         .name = "SDL3",
         .target = target,
         .optimize = optimize,
+        .strip = true,
     });
     {
         lib.addIncludePath(sdl_dep.path("src"));
@@ -37,10 +38,11 @@ pub fn build(b: *std.Build) !void {
         });
 
         const SDL_ASSERT_LEVEL: u8 = switch (optimize) {
-            .ReleaseFast, .ReleaseSmall => 1,
-            .ReleaseSafe, .Debug => 3, // paranoid
+            .ReleaseFast, .ReleaseSmall, .ReleaseSafe => 0,
+            .Debug => 3,
         };
         lib.defineCMacro("SDL_ASSERT_LEVEL", b.fmt("{d}", .{SDL_ASSERT_LEVEL}));
+        lib.defineCMacro("NDEBUG", "1");
 
         lib.linkLibC();
 
@@ -485,6 +487,7 @@ pub fn build(b: *std.Build) !void {
         .target = target,
         .optimize = optimize,
         .root_source_file = b.addWriteFiles().add("stub.c", ""),
+        .strip = true,
     });
     {
         sdl_for_libs.addIncludePath(sdl_dep.path("include"));
@@ -496,6 +499,7 @@ pub fn build(b: *std.Build) !void {
         .name = "SDL3_ttf",
         .target = target,
         .optimize = optimize,
+        .strip = true,
     });
     {
         SDL_ttf.addCSourceFiles(.{
@@ -561,6 +565,7 @@ pub fn build(b: *std.Build) !void {
             .target = target,
             .root_source_file = b.path(b.fmt("src/{s}.zig", .{name})),
             .optimize = optimize,
+            .strip = true,
         });
         exe.root_module.addImport("sdl", module);
 
