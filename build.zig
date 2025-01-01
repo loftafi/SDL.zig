@@ -365,7 +365,7 @@ pub fn build(b: *std.Build) !void {
                     .style = .{ .cmake = sdl_dep.path(
                         "include/build_config/SDL_build_config.h.cmake",
                     ) },
-                    .include_path = "include/build_config/SDL_build_config.h",
+                    .include_path = "SDL_build_config.h",
                 }, values));
 
                 lib.addCSourceFiles(.{
@@ -402,7 +402,6 @@ pub fn build(b: *std.Build) !void {
                         "frog-color-management-v1",
                         "idle-inhibit-unstable-v1",
                         "input-timestamps-unstable-v1",
-                        "kde-output-order-v1",
                         "keyboard-shortcuts-inhibit-unstable-v1",
                         "pointer-constraints-unstable-v1",
                         "primary-selection-unstable-v1",
@@ -623,36 +622,6 @@ pub fn build(b: *std.Build) !void {
                 "src/test/SDL_test_log.c",
                 "src/test/SDL_test_md5.c",
                 "src/test/SDL_test_memory.c",
-
-                "test/gamepadutils.c",
-
-                "test/testautomation_audio.c",
-                "test/testautomation_clipboard.c",
-                "test/testautomation_events.c",
-                "test/testautomation_guid.c",
-                "test/testautomation_hints.c",
-                "test/testautomation_images.c",
-                // TODO: fix issue here, then re-enable
-                // "test/testautomation_intrinsics.c",
-                "test/testautomation_iostream.c",
-                "test/testautomation_joystick.c",
-                "test/testautomation_keyboard.c",
-                "test/testautomation_log.c",
-                "test/testautomation_main.c",
-                "test/testautomation_math.c",
-                "test/testautomation_mouse.c",
-                "test/testautomation_pixels.c",
-                "test/testautomation_platform.c",
-                "test/testautomation_properties.c",
-                "test/testautomation_rect.c",
-                "test/testautomation_render.c",
-                "test/testautomation_sdltest.c",
-                "test/testautomation_stdlib.c",
-                "test/testautomation_subsystems.c",
-                "test/testautomation_surface.c",
-                "test/testautomation_time.c",
-                "test/testautomation_timer.c",
-                "test/testautomation_video.c",
             },
             .flags = &.{},
         });
@@ -660,92 +629,119 @@ pub fn build(b: *std.Build) !void {
         test_utils.linkLibC();
     }
 
+    // SDL/test/CMakeLists.txt
     const tests = [_][]const u8{
         "checkkeys",
-        "checkkeysthreads",
         "loopwave",
-        "pretest",
-        "testatomic",
-        "testaudio",
-        "testaudiorecording",
-        "testaudiohotplug",
+        "testsurround",
+        "testresample",
         "testaudioinfo",
         "testaudiostreamdynamicresample",
-        "testautomation",
-        "testbounds",
-        "testcamera",
-        "testcolorspace",
-        "testcontroller",
-        "testcustomcursor",
-        "testdialog",
-        "testdisplayinfo",
+
+        // TODO: issues with testautomation_intrinsics.c
+        //   error: always_inline function '_mm512_add_ps' requires target feature 'evex512', but would be inlined into function 'kernel_floats_add_avx512f' that is compiled without support for 'evex512'
+        // "testautomation",
+
+        "testmultiaudio",
+        "testaudiohotplug",
+        "testaudiorecording",
+        "testatomic",
+        "testintersections",
+        "testrelative",
+        "testhittesting",
         "testdraw",
         "testdrawchessboard",
         "testdropfile",
         "testerror",
-        "testevdev",
-        "testffmpeg",
-        "testffmpeg_vulkan",
+
+        // src/core/linux/SDL_evdev_capabilities.h: #include "SDL_internal.h"
+        // "testevdev",
+
+        // figure out xdg-shell-client-protocol.h issue
+        // "testnative",
+
+        "testaudio",
+        "testcolorspace",
         "testfile",
-        "testfilesystem",
+        "testcontroller",
         "testgeometry",
         "testgl",
         "testgles",
+        "testgpu_simple_clear",
+        "testgpu_spinning_cube",
+
+        // if android
+        //   testgles -l GLESv1CM
+        // if ios or tvos
+        //   testgles -l OpenGLES
+
+        // if GLES2/gl2platform.h
         "testgles2",
         "testgles2_sdf",
+
         "testhaptic",
-        "testhittesting",
         "testhotplug",
+        "testpen",
+        "testrumble",
+        "testthread",
         "testiconv",
-        "testime",
-        "testintersections",
         "testkeys",
         "testloadso",
         "testlocale",
         "testlock",
-        "testmanymouse",
-        "testmessage",
-        "testmodal",
-        "testmouse",
-        "testmultiaudio",
-        "testnative",
-        "testnativew32",
-        "testnativewayland",
-        "testnativex11",
-        "testoffscreen",
-        "testoverlay",
-        "testpen",
-        "testplatform",
-        "testpopup",
-        "testpower",
-        "testqsort",
-        "testrelative",
-        "testrendercopyex",
-        "testrendertarget",
-        "testresample",
-        "testrumble",
         "testrwlock",
+        "testmouse",
+        "testoverlay",
+        "testplatform",
+        "testpower",
+        "testfilesystem",
+
+        // if windows32
+        // "pretest",
+
+        "testrendertarget",
         "testscale",
         "testsem",
         "testsensor",
         "testshader",
+
+        // if emscripten
+        //   testshader -sLEGACY_GL_EMULATION
+
         "testshape",
         "testsprite",
         "testspriteminimal",
+        "testspritesurface",
         "teststreaming",
-        "testsurround",
-        "testthread",
-        "testtime",
         "testtimer",
         "testurl",
         "testver",
+        "testcamera",
         "testviewport",
-        "testvulkan",
-        "testwaylandcustom",
         "testwm",
         "testyuv",
-        "testyuv_cvt",
         "torturethread",
+        "testrendercopyex",
+        "testmessage",
+        "testdisplayinfo",
+        "testqsort",
+        "testbounds",
+        "testcustomcursor",
+        "testvulkan",
+        "testoffscreen",
+        "testpopup",
+        "testdialog",
+        "testtime",
+        "testmanymouse",
+        "testmodal",
+
+        // TODO: testprocess depends on childprocess, needs arg
+        "testprocess",
+        "childprocess",
+
+        // if wayland
+        //   TODO: figure out xdg-shell-client-protocol.h issue
+        // "testwaylandcustom",
     };
     for (tests) |name| {
         const exe = b.addExecutable(.{
@@ -753,10 +749,99 @@ pub fn build(b: *std.Build) !void {
             .target = target,
             .optimize = optimize,
         });
-        exe.addCSourceFile(.{
-            .file = sdl_dep.path(b.fmt("test/{s}.c", .{name})),
-            .flags = &.{},
-        });
+
+        if (std.mem.eql(u8, name, "testautomation")) {
+            exe.addCSourceFiles(.{
+                .root = sdl_dep.path(""),
+                .files = &.{
+                    "test/testautomation_audio.c",
+                    "test/testautomation_blit.c",
+                    "test/testautomation.c",
+                    "test/testautomation_clipboard.c",
+                    "test/testautomation_events.c",
+                    "test/testautomation_guid.c",
+                    "test/testautomation_hints.c",
+                    "test/testautomation_images.c",
+
+                    // TODO: issues with testautomation
+                    // "test/testautomation_intrinsics.c",
+
+                    "test/testautomation_iostream.c",
+                    "test/testautomation_joystick.c",
+                    "test/testautomation_keyboard.c",
+                    "test/testautomation_log.c",
+                    "test/testautomation_main.c",
+                    "test/testautomation_math.c",
+                    "test/testautomation_mouse.c",
+                    "test/testautomation_pixels.c",
+                    "test/testautomation_platform.c",
+                    "test/testautomation_properties.c",
+                    "test/testautomation_rect.c",
+                    "test/testautomation_render.c",
+                    "test/testautomation_sdltest.c",
+                    "test/testautomation_stdlib.c",
+                    "test/testautomation_subsystems.c",
+                    "test/testautomation_surface.c",
+                    "test/testautomation_time.c",
+                    "test/testautomation_timer.c",
+                    "test/testautomation_video.c",
+                },
+                .flags = &.{},
+            });
+        } else if (std.mem.eql(u8, name, "testnative")) {
+            switch (target.result.os.tag) {
+                .macos => exe.addCSourceFiles(.{
+                    .root = sdl_dep.path(""),
+                    .files = &.{
+                        "test/testnative.c",
+                        "test/testnativecocoa.m",
+                        "test/testnativex11.c",
+                    },
+                    .flags = &.{},
+                }),
+                .windows => exe.addCSourceFiles(.{
+                    .root = sdl_dep.path(""),
+                    .files = &.{
+                        "test/testnative.c",
+                        "test/testnativew32.c",
+                    },
+                    .flags = &.{},
+                }),
+                else => exe.addCSourceFiles(.{
+                    .root = sdl_dep.path(""),
+                    .files = &.{
+                        "test/testnative.c",
+
+                        // "test/testnativex11.c",
+                        "test/testnativewayland.c",
+                    },
+                    .flags = &.{},
+                }),
+            }
+        } else if (std.mem.eql(u8, name, "testcontroller")) {
+            exe.addCSourceFiles(.{
+                .root = sdl_dep.path(""),
+                .files = &.{
+                    "test/testcontroller.c",
+                    "test/gamepadutils.c",
+                },
+                .flags = &.{},
+            });
+        } else if (std.mem.eql(u8, name, "testyuv")) {
+            exe.addCSourceFiles(.{
+                .root = sdl_dep.path(""),
+                .files = &.{
+                    "test/testyuv.c",
+                    "test/testyuv_cvt.c",
+                },
+                .flags = &.{},
+            });
+        } else {
+            exe.addCSourceFile(.{
+                .file = sdl_dep.path(b.fmt("test/{s}.c", .{name})),
+                .flags = &.{},
+            });
+        }
         exe.linkLibrary(lib);
         exe.linkLibrary(test_utils);
 
@@ -796,6 +881,8 @@ pub fn build(b: *std.Build) !void {
             SdlExample{ .path = "examples/audio/03-load-wav/load-wav.c", .name = "load-wav" },
             SdlExample{ .path = "examples/camera/01-read-and-draw/read-and-draw.c", .name = "read-and-draw" },
             SdlExample{ .path = "examples/game/01-snake/snake.c", .name = "snake" },
+            SdlExample{ .path = "examples/game/02-woodeneye-008/woodeneye-008.c", .name = "woodeneye" },
+            SdlExample{ .path = "examples/game/03-infinite-monkeys/infinite-monkeys.c", .name = "infinite-monkeys" },
             SdlExample{ .path = "examples/pen/01-drawing-lines/drawing-lines.c", .name = "drawing-lines" },
             SdlExample{ .path = "examples/renderer/01-clear/clear.c", .name = "clear" },
             SdlExample{ .path = "examples/renderer/02-primitives/primitives.c", .name = "primitives" },
@@ -811,6 +898,7 @@ pub fn build(b: *std.Build) !void {
             SdlExample{ .path = "examples/renderer/14-viewport/viewport.c", .name = "viewport" },
             SdlExample{ .path = "examples/renderer/15-cliprect/cliprect.c", .name = "cliprect" },
             SdlExample{ .path = "examples/renderer/17-read-pixels/read-pixels.c", .name = "read-pixels" },
+            SdlExample{ .path = "examples/renderer/18-debug-text/debug-text.c", .name = "debug-text" },
         };
 
         for (sdl_examples) |sdl_example| {
@@ -1119,7 +1207,6 @@ const linux_src_files = [_][]const u8{
     "src/core/linux/SDL_fcitx.c",
     "src/core/linux/SDL_ibus.c",
     "src/core/linux/SDL_ime.c",
-    "src/core/linux/SDL_sandbox.c",
     "src/core/linux/SDL_system_theme.c",
     "src/core/linux/SDL_threadprio.c",
     // "src/core/linux/SDL_udev.c",
