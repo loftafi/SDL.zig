@@ -508,7 +508,13 @@ pub fn build(b: *std.Build) !void {
     {
         SDL_ttf.addCSourceFiles(.{
             .root = sdl_ttf_dep.path(""),
-            .files = &.{"src/SDL_ttf.c"},
+            .files = &.{
+                "src/SDL_gpu_textengine.c",
+                "src/SDL_hashtable.c",
+                "src/SDL_renderer_textengine.c",
+                "src/SDL_surface_textengine.c",
+                "src/SDL_ttf.c",
+            },
             .flags = &.{},
         });
         SDL_ttf.addIncludePath(sdl_ttf_dep.path("include"));
