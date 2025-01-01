@@ -597,7 +597,7 @@ pub fn build(b: *std.Build) !void {
 
     //--
 
-    const test_step = b.step("test", "Build all SDL test programs");
+    const test_step = b.step("sdl-test", "Build all SDL test programs");
 
     const test_utils = b.addStaticLibrary(.{
         .name = "testutils",
