@@ -12,8 +12,8 @@
             .hash = "122099f4cc54e09ca76cb1b5c9d32f6809dab17c53c0d81dbc07fb3bf52c2ac8a793",
         },
         .sdl_ttf = .{
-            .url = "git+https://github.com/libsdl-org/SDL_ttf?ref=main#41342890704ef3cac661a0d301f3dd122d96a039",
-            .hash = "1220c2c929aa0731a6ed363d4aa5beac07d3224e52f3b7a28052efee71ce43512e9c",
+            .url = "git+https://github.com/libsdl-org/SDL_ttf?ref=main#dae648ecf06a39f27fe2973e9d8b9a593f068bb1",
+            .hash = "12208330d02b21639784caf24dbc92388eebb3a76ca27cab0db3e52ce6b039d758c6",
         },
         .freetype = .{
             .path = "build/freetype",

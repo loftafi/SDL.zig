@@ -9,8 +9,8 @@
     .dependencies = .{
         // NOTE: matches SDL_ttf's external/freetype submodule
         .freetype = .{
-            .url = "git+https://github.com/libsdl-org/freetype#c82745878da1acef2ce6bd7e17a8d59b8612d509",
-            .hash = "12208f11ed8d8b1a3c25331dcc89c382ca8de704192b469225c9fee58a038953d509",
+            .url = "git+https://github.com/libsdl-org/freetype?ref=VER-2-13-2#920c5502cc3ddda88f6c7d85ee834ac611bb11cc",
+            .hash = "1220b81f6ecfb3fd222f76cf9106fecfa6554ab07ec7fdc4124b9bb063ae2adf969d",
         },
     },
 }
