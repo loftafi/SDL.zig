@@ -559,13 +559,15 @@ pub fn build(b: *std.Build) !void {
         // module.addIncludePath(b.path("SDL/build/install/include"));
     }
 
+    const zig_examples_step = b.step("zig-examples", "Build all Zig examples");
+
     const zig_examples = [_][]const u8{
         "minimal",
         "ttf",
     };
     for (zig_examples) |name| {
         const exe = b.addExecutable(.{
-            .name = b.fmt("zig-{s}", .{name}),
+            .name = b.fmt("zig-examples-{s}", .{name}),
             .target = target,
             .root_source_file = b.path(b.fmt("src/{s}.zig", .{name})),
             .optimize = optimize,
@@ -585,16 +587,17 @@ pub fn build(b: *std.Build) !void {
 
         if (b.args) |args| run.addArgs(args);
 
-        const install = b.addInstallBinFile(exe.getEmittedBin(), name);
+        const install = b.addInstallBinFile(exe.getEmittedBin(), exe.name);
+        zig_examples_step.dependOn(&install.step);
 
-        const run_step = b.step(b.fmt("zig-{s}", .{name}), b.fmt("Run src/{s}.zig", .{name}));
+        const run_step = b.step(exe.name, b.fmt("Run src/{s}.zig", .{name}));
         run_step.dependOn(&run.step);
         run_step.dependOn(&install.step); // install example if you run it
     }
 
     //--
 
-    const test_step = b.step("test", "Build all test programs");
+    const test_step = b.step("test", "Build all SDL test programs");
 
     const test_utils = b.addStaticLibrary(.{
         .name = "testutils",
@@ -735,9 +738,9 @@ pub fn build(b: *std.Build) !void {
         "testmanymouse",
         "testmodal",
 
-        // TODO: testprocess depends on childprocess, needs arg
+        // TODO: testprocess requires executable childprocess as an ARG
         "testprocess",
-        "childprocess",
+        // "childprocess",
 
         // if wayland
         //   TODO: figure out xdg-shell-client-protocol.h issue
@@ -745,7 +748,7 @@ pub fn build(b: *std.Build) !void {
     };
     for (tests) |name| {
         const exe = b.addExecutable(.{
-            .name = name,
+            .name = b.fmt("sdl-test-{s}", .{name}),
             .target = target,
             .optimize = optimize,
         });
@@ -861,44 +864,46 @@ pub fn build(b: *std.Build) !void {
         //     run.addArgs(&.{ "--log", "all" });
         // }
 
-        const install = b.addInstallBinFile(exe.getEmittedBin(), name);
+        const install = b.addInstallBinFile(exe.getEmittedBin(), exe.name);
         test_step.dependOn(&install.step);
 
-        const run_step = b.step(name, b.fmt("Run {s}", .{name}));
+        const run_step = b.step(exe.name, b.fmt("SDL/test/{s}.c", .{name}));
         run_step.dependOn(&run.step);
         run_step.dependOn(&install.step); // install test if you run it
     }
 
+    const example_step = b.step("sdl-examples", "Build all SDL example programs");
+
     {
-        const SdlExample = struct {
+        const Example = struct {
             path: []const u8,
             name: []const u8,
         };
 
-        const sdl_examples = [_]SdlExample{
-            SdlExample{ .path = "examples/audio/01-simple-playback/simple-playback.c", .name = "simple-playback" },
-            SdlExample{ .path = "examples/audio/02-simple-playback-callback/simple-playback-callback.c", .name = "simple-playback-callback" },
-            SdlExample{ .path = "examples/audio/03-load-wav/load-wav.c", .name = "load-wav" },
-            SdlExample{ .path = "examples/camera/01-read-and-draw/read-and-draw.c", .name = "read-and-draw" },
-            SdlExample{ .path = "examples/game/01-snake/snake.c", .name = "snake" },
-            SdlExample{ .path = "examples/game/02-woodeneye-008/woodeneye-008.c", .name = "woodeneye" },
-            SdlExample{ .path = "examples/game/03-infinite-monkeys/infinite-monkeys.c", .name = "infinite-monkeys" },
-            SdlExample{ .path = "examples/pen/01-drawing-lines/drawing-lines.c", .name = "drawing-lines" },
-            SdlExample{ .path = "examples/renderer/01-clear/clear.c", .name = "clear" },
-            SdlExample{ .path = "examples/renderer/02-primitives/primitives.c", .name = "primitives" },
-            SdlExample{ .path = "examples/renderer/03-lines/lines.c", .name = "lines" },
-            SdlExample{ .path = "examples/renderer/04-points/points.c", .name = "points" },
-            SdlExample{ .path = "examples/renderer/05-rectangles/rectangles.c", .name = "rectangles" },
-            SdlExample{ .path = "examples/renderer/06-textures/textures.c", .name = "textures" },
-            SdlExample{ .path = "examples/renderer/07-streaming-textures/streaming-textures.c", .name = "streaming-textures" },
-            SdlExample{ .path = "examples/renderer/08-rotating-textures/rotating-textures.c", .name = "rotating-textures" },
-            SdlExample{ .path = "examples/renderer/09-scaling-textures/scaling-textures.c", .name = "scaling-textures" },
-            SdlExample{ .path = "examples/renderer/10-geometry/geometry.c", .name = "geometry" },
-            SdlExample{ .path = "examples/renderer/11-color-mods/color-mods.c", .name = "color-mods" },
-            SdlExample{ .path = "examples/renderer/14-viewport/viewport.c", .name = "viewport" },
-            SdlExample{ .path = "examples/renderer/15-cliprect/cliprect.c", .name = "cliprect" },
-            SdlExample{ .path = "examples/renderer/17-read-pixels/read-pixels.c", .name = "read-pixels" },
-            SdlExample{ .path = "examples/renderer/18-debug-text/debug-text.c", .name = "debug-text" },
+        const sdl_examples = [_]Example{
+            Example{ .path = "examples/audio/01-simple-playback/simple-playback.c", .name = "simple-playback" },
+            Example{ .path = "examples/audio/02-simple-playback-callback/simple-playback-callback.c", .name = "simple-playback-callback" },
+            Example{ .path = "examples/audio/03-load-wav/load-wav.c", .name = "load-wav" },
+            Example{ .path = "examples/camera/01-read-and-draw/read-and-draw.c", .name = "read-and-draw" },
+            Example{ .path = "examples/game/01-snake/snake.c", .name = "snake" },
+            Example{ .path = "examples/game/02-woodeneye-008/woodeneye-008.c", .name = "woodeneye" },
+            Example{ .path = "examples/game/03-infinite-monkeys/infinite-monkeys.c", .name = "infinite-monkeys" },
+            Example{ .path = "examples/pen/01-drawing-lines/drawing-lines.c", .name = "drawing-lines" },
+            Example{ .path = "examples/renderer/01-clear/clear.c", .name = "clear" },
+            Example{ .path = "examples/renderer/02-primitives/primitives.c", .name = "primitives" },
+            Example{ .path = "examples/renderer/03-lines/lines.c", .name = "lines" },
+            Example{ .path = "examples/renderer/04-points/points.c", .name = "points" },
+            Example{ .path = "examples/renderer/05-rectangles/rectangles.c", .name = "rectangles" },
+            Example{ .path = "examples/renderer/06-textures/textures.c", .name = "textures" },
+            Example{ .path = "examples/renderer/07-streaming-textures/streaming-textures.c", .name = "streaming-textures" },
+            Example{ .path = "examples/renderer/08-rotating-textures/rotating-textures.c", .name = "rotating-textures" },
+            Example{ .path = "examples/renderer/09-scaling-textures/scaling-textures.c", .name = "scaling-textures" },
+            Example{ .path = "examples/renderer/10-geometry/geometry.c", .name = "geometry" },
+            Example{ .path = "examples/renderer/11-color-mods/color-mods.c", .name = "color-mods" },
+            Example{ .path = "examples/renderer/14-viewport/viewport.c", .name = "viewport" },
+            Example{ .path = "examples/renderer/15-cliprect/cliprect.c", .name = "cliprect" },
+            Example{ .path = "examples/renderer/17-read-pixels/read-pixels.c", .name = "read-pixels" },
+            Example{ .path = "examples/renderer/18-debug-text/debug-text.c", .name = "debug-text" },
         };
 
         for (sdl_examples) |sdl_example| {
@@ -906,7 +911,7 @@ pub fn build(b: *std.Build) !void {
             const name = sdl_example.name;
 
             const exe = b.addExecutable(.{
-                .name = b.fmt("example-{s}", .{name}),
+                .name = b.fmt("sdl-examples-{s}", .{name}),
                 .target = target,
                 .optimize = optimize,
             });
@@ -932,10 +937,10 @@ pub fn build(b: *std.Build) !void {
                 run.setCwd(sdl_dep.path("test"));
             }
 
-            const install = b.addInstallBinFile(exe.getEmittedBin(), name);
-            test_step.dependOn(&install.step);
+            const install = b.addInstallBinFile(exe.getEmittedBin(), exe.name);
+            example_step.dependOn(&install.step);
 
-            const run_step = b.step(b.fmt("example-{s}", .{name}), b.fmt("Run {s}", .{name}));
+            const run_step = b.step(exe.name, b.fmt("Run SDL/{s}", .{path}));
             run_step.dependOn(&run.step);
             run_step.dependOn(&install.step); // install example if you run it
         }
