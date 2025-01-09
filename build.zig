@@ -891,9 +891,9 @@ pub fn build(b: *std.Build) !void {
             Example{ .path = "examples/audio/02-simple-playback-callback/simple-playback-callback.c", .name = "simple-playback-callback" },
             Example{ .path = "examples/audio/03-load-wav/load-wav.c", .name = "load-wav" },
             Example{ .path = "examples/camera/01-read-and-draw/read-and-draw.c", .name = "read-and-draw" },
-            Example{ .path = "examples/game/01-snake/snake.c", .name = "snake" },
-            Example{ .path = "examples/game/02-woodeneye-008/woodeneye-008.c", .name = "woodeneye" },
-            Example{ .path = "examples/game/03-infinite-monkeys/infinite-monkeys.c", .name = "infinite-monkeys" },
+            Example{ .path = "examples/demo/01-snake/snake.c", .name = "snake" },
+            Example{ .path = "examples/demo/02-woodeneye-008/woodeneye-008.c", .name = "woodeneye" },
+            Example{ .path = "examples/demo/03-infinite-monkeys/infinite-monkeys.c", .name = "infinite-monkeys" },
             Example{ .path = "examples/pen/01-drawing-lines/drawing-lines.c", .name = "drawing-lines" },
             Example{ .path = "examples/renderer/01-clear/clear.c", .name = "clear" },
             Example{ .path = "examples/renderer/02-primitives/primitives.c", .name = "primitives" },
@@ -988,6 +988,7 @@ const generic_src_files = [_][]const u8{
 
     // "src/dialog/dummy/SDL_dummydialog.c",
     "src/dialog/SDL_dialog_utils.c",
+    "src/dialog/SDL_dialog.c",
 
     "src/dynapi/SDL_dynapi.c",
 
@@ -1008,6 +1009,11 @@ const generic_src_files = [_][]const u8{
     "src/events/SDL_windowevents.c",
 
     "src/file/SDL_iostream.c",
+    "src/file/SDL_asyncio.c",
+
+    "src/file/generic/SDL_asyncio_generic.c",
+    "src/file/io_uring/SDL_asyncio_liburing.c",
+    // "src/file/windows/SDL_asyncio_windows_ioring.c",
 
     "src/filesystem/SDL_filesystem.c",
     // "src/filesystem/dummy/SDL_sysfilesystem.c",
@@ -1147,6 +1153,9 @@ const generic_src_files = [_][]const u8{
     "src/time/SDL_time.c",
     "src/timer/SDL_timer.c",
 
+    "src/tray/SDL_tray_utils.c",
+    "src/tray/dummy/SDL_tray.c",
+
     "src/video/SDL_RLEaccel.c",
     "src/video/SDL_blit.c",
     "src/video/SDL_blit_0.c",
@@ -1284,7 +1293,6 @@ const linux_src_files = [_][]const u8{
     // "src/joystick/n3ds/SDL_sysjoystick.c",
     // "src/joystick/ps2/SDL_sysjoystick.c",
     // "src/joystick/psp/SDL_sysjoystick.c",
-    "src/joystick/steam/SDL_steamcontroller.c",
     // "src/joystick/vita/SDL_sysjoystick.c",
 
     // "src/locale/android/SDL_syslocale.c",
@@ -1344,6 +1352,8 @@ const linux_src_files = [_][]const u8{
     // "src/timer/psp/SDL_systimer.c",
     "src/timer/unix/SDL_systimer.c",
     // "src/timer/vita/SDL_systimer.c",
+
+    "src/tray/unix/SDL_tray.c",
 
     // "src/video/android/SDL_androidclipboard.c",
     // "src/video/android/SDL_androidevents.c",
@@ -1420,6 +1430,7 @@ const linux_src_files = [_][]const u8{
     "src/video/wayland/SDL_waylandvideo.c",
     "src/video/wayland/SDL_waylandvulkan.c",
     "src/video/wayland/SDL_waylandwindow.c",
+    // "src/video/x11/SDL_x11xsync.c",
     // "src/video/x11/SDL_x11clipboard.c",
     // "src/video/x11/SDL_x11dyn.c",
     // "src/video/x11/SDL_x11events.c",
