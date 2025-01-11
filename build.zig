@@ -1516,6 +1516,8 @@ const objective_c_src_files = [_][]const u8{
     "src/render/metal/SDL_render_metal.m",
     "src/sensor/coremotion/SDL_coremotionsensor.m",
 
+    "src/tray/cocoa/SDL_tray.m",
+
     "src/video/cocoa/SDL_cocoaclipboard.m",
     "src/video/cocoa/SDL_cocoaevents.m",
     "src/video/cocoa/SDL_cocoakeyboard.m",
