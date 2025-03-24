@@ -3,8 +3,9 @@
 // SPDX-License-Identifier: Zlib
 
 .{
-    .name = "sdl",
-    .version = "0.0.0",
+    .name = .sdl,
+    .version = "0.0.1",
+    .fingerprint = 0xec638ccb9c209e38,
     .paths = .{""},
     .dependencies = .{
         .sdl = .{

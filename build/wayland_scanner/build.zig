@@ -15,7 +15,7 @@ pub fn build(b: *std.Build) !void {
 
     const expat = b.addStaticLibrary(.{
         .name = "expat",
-        .target = b.host,
+        .target = b.graph.host,
         .optimize = optimize,
     });
     {
@@ -68,7 +68,7 @@ pub fn build(b: *std.Build) !void {
 
     const wayland_scanner = b.addExecutable(.{
         .name = "wayland-scanner",
-        .target = b.host,
+        .target = b.graph.host,
         .optimize = optimize,
     });
     {

@@ -12,7 +12,7 @@ pub fn build(b: *std.Build) !void {
     const sdl_ttf_dep = b.dependency("sdl_ttf", .{});
     const freetype_dep = b.dependency("freetype", .{});
     const wayland_scanner_dep = b.dependency("wayland_scanner", .{
-        .target = b.host,
+        .target = b.graph.host,
         .optimize = .ReleaseFast,
     });
     const font_dep = b.dependency("fonts", .{});
@@ -41,12 +41,12 @@ pub fn build(b: *std.Build) !void {
             .ReleaseFast, .ReleaseSmall, .ReleaseSafe => 0,
             .Debug => 3,
         };
-        lib.defineCMacro("SDL_ASSERT_LEVEL", b.fmt("{d}", .{SDL_ASSERT_LEVEL}));
+        lib.root_module.addCMacro("SDL_ASSERT_LEVEL", b.fmt("{d}", .{SDL_ASSERT_LEVEL}));
 
         if (optimize != .Debug) {
-            lib.defineCMacro("NDEBUG", "1");
-            lib.defineCMacro("__FILE__", "\"__FILE__\"");
-            lib.defineCMacro("__LINE__", "0");
+            lib.root_module.addCMacro("NDEBUG", "1");
+            lib.root_module.addCMacro("__FILE__", "\"__FILE__\"");
+            lib.root_module.addCMacro("__LINE__", "0");
         }
 
         lib.linkLibC();
@@ -65,7 +65,7 @@ pub fn build(b: *std.Build) !void {
                 lib.linkSystemLibrary("version");
                 lib.linkSystemLibrary("oleaut32");
                 lib.linkSystemLibrary("ole32");
-                lib.defineCMacro("SDL_USE_BUILTIN_OPENGL_DEFINITIONS", "1");
+                lib.root_module.addCMacro("SDL_USE_BUILTIN_OPENGL_DEFINITIONS", "1");
             },
             .macos => {
                 lib.addCSourceFiles(.{
@@ -78,7 +78,7 @@ pub fn build(b: *std.Build) !void {
                     .files = &objective_c_src_files,
                     .flags = &.{"-fobjc-arc"},
                 });
-                lib.defineCMacro("SDL_USE_BUILTIN_OPENGL_DEFINITIONS", "1");
+                lib.root_module.addCMacro("SDL_USE_BUILTIN_OPENGL_DEFINITIONS", "1");
 
                 // TODO: re-check which frameworks are needed
                 lib.linkFramework("AudioToolbox");
@@ -94,14 +94,14 @@ pub fn build(b: *std.Build) !void {
                 lib.linkFramework("CoreVideo");
                 lib.linkFramework("ForceFeedback");
                 lib.linkFramework("Foundation");
-                lib.linkFrameworkWeak("GameController");
+                lib.linkFramework("GameController");
                 lib.linkFramework("IOKit");
-                lib.linkFrameworkWeak("Metal");
-                lib.linkFrameworkWeak("QuartzCore");
-                lib.linkFrameworkWeak("UniformTypeIdentifiers");
+                lib.linkFramework("Metal");
+                lib.linkFramework("QuartzCore");
+                lib.linkFramework("UniformTypeIdentifiers");
                 lib.linkSystemLibrary("objc");
 
-                const sdk = std.zig.system.darwin.getSdk(b.allocator, b.host.result) orelse
+                const sdk = std.zig.system.darwin.getSdk(b.allocator, b.graph.host.result) orelse
                     @panic("macOS SDK is missing");
                 lib.addSystemIncludePath(.{ .cwd_relative = b.pathJoin(&.{ sdk, "/usr/include" }) });
                 lib.addSystemFrameworkPath(.{ .cwd_relative = b.pathJoin(&.{ sdk, "/System/Library/Frameworks" }) });
@@ -376,7 +376,7 @@ pub fn build(b: *std.Build) !void {
 
                 inline for (std.meta.fields(@TypeOf(values))) |f| {
                     const value = b.fmt("{any}", .{@field(values, f.name)});
-                    lib.defineCMacro(f.name, value);
+                    lib.root_module.addCMacro(f.name, value);
                 }
 
                 // SDL3_DYNAMIC_API=/my/actual/libSDL3.so.0
@@ -387,7 +387,7 @@ pub fn build(b: *std.Build) !void {
 
                 // Avoid
                 // SDL/include/build_config/SDL_build_config_minimal.h
-                lib.defineCMacro("SDL_build_config_minimal_h_", "1");
+                lib.root_module.addCMacro("SDL_build_config_minimal_h_", "1");
 
                 //--
 
@@ -523,7 +523,7 @@ pub fn build(b: *std.Build) !void {
         SDL_ttf.linkLibrary(freetype_dep.artifact("freetype"));
 
         if (target.result.os.tag == .macos) {
-            const sdk = std.zig.system.darwin.getSdk(b.allocator, b.host.result) orelse
+            const sdk = std.zig.system.darwin.getSdk(b.allocator, b.graph.host.result) orelse
                 @panic("macOS SDK is missing");
             SDL_ttf.addSystemIncludePath(.{ .cwd_relative = b.pathJoin(&.{ sdk, "/usr/include" }) });
             SDL_ttf.addSystemFrameworkPath(.{ .cwd_relative = b.pathJoin(&.{ sdk, "/System/Library/Frameworks" }) });
@@ -582,7 +582,7 @@ pub fn build(b: *std.Build) !void {
         exe.root_module.addImport("sdl", module);
 
         if (target.result.os.tag == .macos) {
-            const sdk = std.zig.system.darwin.getSdk(b.allocator, b.host.result) orelse
+            const sdk = std.zig.system.darwin.getSdk(b.allocator, b.graph.host.result) orelse
                 @panic("macOS SDK is missing");
             exe.addSystemIncludePath(.{ .cwd_relative = b.pathJoin(&.{ sdk, "/usr/include" }) });
             exe.addSystemFrameworkPath(.{ .cwd_relative = b.pathJoin(&.{ sdk, "/System/Library/Frameworks" }) });
@@ -855,7 +855,7 @@ pub fn build(b: *std.Build) !void {
         exe.linkLibrary(test_utils);
 
         if (target.result.os.tag == .macos) {
-            const sdk = std.zig.system.darwin.getSdk(b.allocator, b.host.result) orelse
+            const sdk = std.zig.system.darwin.getSdk(b.allocator, b.graph.host.result) orelse
                 @panic("macOS SDK is missing");
             exe.addSystemIncludePath(.{ .cwd_relative = b.pathJoin(&.{ sdk, "/usr/include" }) });
             exe.addSystemFrameworkPath(.{ .cwd_relative = b.pathJoin(&.{ sdk, "/System/Library/Frameworks" }) });
@@ -928,7 +928,7 @@ pub fn build(b: *std.Build) !void {
             exe.linkLibrary(lib);
 
             if (target.result.os.tag == .macos) {
-                const sdk = std.zig.system.darwin.getSdk(b.allocator, b.host.result) orelse
+                const sdk = std.zig.system.darwin.getSdk(b.allocator, b.graph.host.result) orelse
                     @panic("macOS SDK is missing");
                 exe.addSystemIncludePath(.{ .cwd_relative = b.pathJoin(&.{ sdk, "/usr/include" }) });
                 exe.addSystemFrameworkPath(.{ .cwd_relative = b.pathJoin(&.{ sdk, "/System/Library/Frameworks" }) });

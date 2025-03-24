@@ -20,9 +20,9 @@ pub fn build(b: *std.Build) !void {
     });
     {
         if (optimize != .Debug) {
-            lib.defineCMacro("NDEBUG", "1");
-            lib.defineCMacro("__FILE__", "\"__FILE__\"");
-            lib.defineCMacro("__LINE__", "0");
+            lib.root_module.addCMacro("NDEBUG", "1");
+            lib.root_module.addCMacro("__FILE__", "\"__FILE__\"");
+            lib.root_module.addCMacro("__LINE__", "0");
         }
 
         lib.addCSourceFiles(.{
@@ -72,9 +72,9 @@ pub fn build(b: *std.Build) !void {
             .flags = &.{},
         });
 
-        lib.defineCMacro("FT2_BUILD_LIBRARY", "1");
-        lib.defineCMacro("HAVE_UNISTD_H", "");
-        lib.defineCMacro("HAVE_FCNTL_H", "");
+        lib.root_module.addCMacro("FT2_BUILD_LIBRARY", "1");
+        lib.root_module.addCMacro("HAVE_UNISTD_H", "");
+        lib.root_module.addCMacro("HAVE_FCNTL_H", "");
 
         switch (target.result.os.tag) {
             .windows => {
@@ -109,7 +109,7 @@ pub fn build(b: *std.Build) !void {
         lib.installHeadersDirectory(freetype_dep.path("include/freetype"), "freetype", .{});
 
         if (target.result.os.tag == .macos) {
-            const sdk = std.zig.system.darwin.getSdk(b.allocator, b.host.result) orelse
+            const sdk = std.zig.system.darwin.getSdk(b.allocator, b.graph.host.result) orelse
                 @panic("macOS SDK is missing");
             lib.addSystemIncludePath(.{ .cwd_relative = b.pathJoin(&.{ sdk, "/usr/include" }) });
             lib.addSystemFrameworkPath(.{ .cwd_relative = b.pathJoin(&.{ sdk, "/System/Library/Frameworks" }) });
