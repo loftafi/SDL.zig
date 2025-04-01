@@ -3,8 +3,9 @@
 // SPDX-License-Identifier: Zlib
 
 .{
-    .name = "freetype",
+    .name = .freetype,
     .version = "0.0.0",
+    .fingerprint = 0xac2059b689838d78,
     .paths = .{""},
     .dependencies = .{
         // NOTE: matches SDL_ttf's external/freetype submodule

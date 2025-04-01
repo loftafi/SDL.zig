@@ -3,8 +3,9 @@
 // SPDX-License-Identifier: Zlib
 
 .{
-    .name = "wayland_scanner",
+    .name = .wayland_scanner,
     .version = "0.0.0",
+    .fingerprint = 0x501ba345c1864a85,
     .paths = .{""},
     .dependencies = .{
         .wayland = .{

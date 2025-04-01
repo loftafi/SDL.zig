@@ -3,8 +3,9 @@
 // SPDX-License-Identifier: Zlib
 
 .{
-    .name = "fonts",
+    .name = .fonts,
     .version = "0.0.0",
+    .fingerprint = 0x7303e8fb6c57db3a,
     .paths = .{""},
     .dependencies = .{
         .intel_one_mono = .{
